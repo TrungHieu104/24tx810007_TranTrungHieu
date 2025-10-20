@@ -21,7 +21,7 @@ public class CategoryController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
 
-        if (session != null && session.getAttribute("account") != null) {
+//        if (session != null && session.getAttribute("account") != null) {
             User user = (User) session.getAttribute("account");
             req.setAttribute("user", user);
             
@@ -30,8 +30,8 @@ public class CategoryController extends HttpServlet {
 
             req.setAttribute("body", "/views/admin/category/index.jsp");
             req.getRequestDispatcher("/views/layouts/admin-layout.jsp").forward(req, resp);
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/login");
-        }
+//        } else {
+//            resp.sendRedirect(req.getContextPath() + "/login");
+//        }
     }
 }

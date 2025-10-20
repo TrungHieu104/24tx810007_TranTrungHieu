@@ -16,7 +16,7 @@ public class LoginController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         if (session != null && session.getAttribute("account") != null) {
-            resp.sendRedirect(req.getContextPath() + "/waiting");
+            resp.sendRedirect(req.getContextPath() + "/routing");
             return;
         }
 
@@ -27,7 +27,7 @@ public class LoginController extends HttpServlet {
                 if (cookie.getName().equals("username")) {
                     session = req.getSession(true);
                     session.setAttribute("username", cookie.getValue());
-                    resp.sendRedirect(req.getContextPath() + "/waiting");
+                    resp.sendRedirect(req.getContextPath() + "/routing");
                     return;
                 }
             }
@@ -58,19 +58,19 @@ public class LoginController extends HttpServlet {
         UserService service = new UserServiceImpl();
         User user = service.login(username, password);
 
-        if (user != null) {
-            HttpSession session = req.getSession(true);
-            session.setAttribute("account", user);
-
-            if (isRememberMe) {
-                saveRememberMe(resp, username);
-            }
-            resp.sendRedirect(req.getContextPath() + "/waiting");
-        } else {
+        if (user == null) {
             alertMsg = "Tài khoản hoặc mật khẩu không đúng";
             req.setAttribute("alert", alertMsg);
             req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
         }
+
+        HttpSession session = req.getSession(true);
+        session.setAttribute("account", user);
+        
+        if (isRememberMe) {
+        	saveRememberMe(resp, username);
+        }
+        resp.sendRedirect(req.getContextPath() + "/routing");
     }
 
     private void saveRememberMe(HttpServletResponse response, String username) {
